@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class CollectingPapers : MonoBehaviour {
     public int papers = 0;
@@ -14,6 +15,30 @@ public class CollectingPapers : MonoBehaviour {
         if (enemy == null)
         {
             enemy = GameObject.Find("Enemy").GetComponent<EnemyScript>();
+        }
+
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Paper");
+        if (gos.Length > papersToWin)
+        {
+            for (int i = 0; i < gos.Length; ++i)
+            {
+                gos[i].SetActive(false);
+            }
+            HashSet<int> setAux = new HashSet<int>();
+            while (setAux.Count != papersToWin)
+            {
+                int idx = Random.Range(0, gos.Length);
+                if (!setAux.Contains(idx))
+                {
+                    setAux.Add(idx);
+                }
+            }
+            int[] indices = new int[papersToWin];
+            setAux.CopyTo(indices);
+            for (int i = 0; i < indices.Length; ++i)
+            {
+                gos[i].SetActive(true);
+            }
         }
 	}
 	

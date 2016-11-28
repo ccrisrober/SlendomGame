@@ -150,7 +150,6 @@ public class EnemyScript : MonoBehaviour {
         if (!isInRange)
         {
             GetComponent<Rigidbody>().velocity = new Vector3(0.0f, GetComponent<Rigidbody>().velocity.y, 0.0f); // maintain gravity
-
             // New Movement - with obstacle avoidance
             Vector3 dir = (player.position - enemy.position).normalized;
             RaycastHit hit;
@@ -165,9 +164,11 @@ public class EnemyScript : MonoBehaviour {
             }
 
             Quaternion rot = Quaternion.LookRotation(dir);
-
-            enemy.rotation = Quaternion.Slerp(enemy.rotation, rot, Time.deltaTime);
-            enemy.position += enemy.forward * speed * Time.deltaTime;
+            GetComponent<NavMeshAgent>().Resume();
+            GetComponent<NavMeshAgent>().speed = speed;
+            // enemy.rotation = Quaternion.Slerp(enemy.rotation, rot, Time.deltaTime);
+            // enemy.position += enemy.forward * speed * Time.deltaTime;
+            GetComponent<NavMeshAgent>().destination = player.transform.position;
         }
         else
         {
@@ -181,6 +182,7 @@ public class EnemyScript : MonoBehaviour {
         transform.LookAt(player);
 
         GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<NavMeshAgent>().Stop();
     }
 
 
